@@ -2,12 +2,12 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import ComponentsPlugin from 'vite-plugin-components'
 import Pages from 'vite-plugin-pages'
-import kebabCase from 'lodash.kebabcase'
+import { componentResolver } from '@chakra-ui/vue-auto-import'
 import path from 'path'
 
 export default defineConfig({
   optimizeDeps: {
-    exclude: ['@popperjs/core'],
+    exclude: ['@popperjs/core', '@vueuse/core', '@vueuse/motion'],
   },
   server: {
     watch: {
@@ -37,18 +37,7 @@ export default defineConfig({
       },
     }),
     ComponentsPlugin({
-      customComponentResolvers: [
-        /**
-         * Handle auto-imports from @chakra-ui/vue-next
-         */
-        (name: string) => {
-          if (kebabCase(name).startsWith('c-'))
-            return {
-              importName: name,
-              path: `@chakra-ui/vue-next`,
-            }
-        },
-      ],
+      customComponentResolvers: [componentResolver],
     }),
   ],
 })
